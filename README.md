@@ -1,0 +1,20 @@
+Tautan Aplikasi PWS: https://maira-azma-footballshop.pbp.cs.ui.ac.id/
+
+1. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+Pertama-tama, saya membaca checklist sampai habis, untuk melihat requirement apa yang dibutuhkan sebelum saya memulai. Kemudian, saya melakukan simplifikasi (karena saya melihat ada beberapa step pada tutorial yang tidak perlu dilakukan, contohnya push bisa dilakukan di akhir saja). Pada pengerjaan ini, saya learning by doing. Pada tutorial 0 dan 1, ada beberapa step yang memang sudah saya pahami. Namun, untuk step-step yang belum terlalu saya pahami, saya bertanya kepada teman saya atau mengonfirmasi pemahaman saya dengan bertanya kepada ChatGPT. 
+
+2. Buatlah bagan yang berisi request client ke web aplikasi berbasis Django beserta responnya dan jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html.
+![alt text](image.png)
+Ketika request client diterima, urls.py akan langsung dijalankan untuk memastikan bahwa url yang ingin diakses client tersedia. Ketika url valid, maka akan dipanggil fungsi pada views.py sesuai url masing-masing. Pada views.py, dipastikan terlebih dahulu bahwa client memang memiliki hak akses untuk url tersebut. Jika client sudah punya izin akses, dapat dilakukan pengambilan database, dan pemilihan tampilan. Setiap halaman memiliki tampilannya masing-masing, views.py membantu kita memilah berbagai template untuk berbagai halaman. Ketika data sudah siap, barulah dilakukan query pada models.py. Selanjutnya, begitu tampilan sudah disesuaikan dan data-data yang akan ditampilkan sudah diproses, Django akan menyesuaikan kedua hal itu sesuai file html pada folder 'templates'. Terakhir, barulah halaman bisa ditampilkan kepada client (Response).
+
+3. Jelaskan peran settings.py dalam proyek Django!
+Sesuai namanya, settings.py dalam proyek Django memiliki peran sebagai pengaturan utama proyek secara keseluruhan. File tersebut menyimpan environment yang perlu di-install sebelum proyek dijalankan, hal ini untuk memastikan bahwa semua yang mengakses aplikasi tersebut dapat menjalankan semua fitur dengan baik. Pengaturan keamanan juga dikelola di sini, siapa saja yang dapat mengakses, apa saja yang dapat diakses, dan lain-lain. Jadi, settings.py adalah pengaturan, dengan cara apa, seperti apa, dan menggunakan apa aplikasi akan berjalan. 
+
+4. Bagaimana cara kerja migrasi database di Django?
+Pertama-tama, ketika file models.py berubah, kita perlu memberitahu sistem bahwa kita melakukan perubahan dengan command 'python manage.py makemigrations'. Kemudian sistem akan mendefinisikan perubahan tersebut. Selanjutnya, ketika command 'python manage.py migrate' dijalankan, sistem barulah membaca pendefinisian perubahan tadi dan menerapkannya ke database. Jadi, perubahan model bisa berdampak pada perubahan database (mungkin dibuat fungsi baru, atau fungsi yang dirubah cara kerjanya). Maka dari itu, setiap melakukan perubahan pada model, kita perlu memastikan bahwa sistem telah memahami perubahan tersebut agar cara kerjanya sudah aman untuk diaplikasikan ke database.
+
+5. Menurut Anda, dari semua framework yang ada, mengapa framework Django dijadikan permulaan pembelajaran pengembangan perangkat lunak?
+Menurut saya, struktur file Django yang terorganisir membuat saya lebih mudah memahami alur kerja sebuah web. Penamaan file yang representatif memudahkan developer untuk mengatur file jika nanti jumlahnya sudah banyak (misal sudah ada beberapa aplikasi). Selain itu, setelah saya telusuri lagi, setiap default code diberikan command yang mudah dipahami. Hal ini mendukung developer-developer baru untuk memahami fungsi file, bahkan tiap baris code yang ada pada file tersebut. 
+
+6. Apakah ada feedback untuk asisten dosen tutorial 1 yang telah kamu kerjakan sebelumnya?
+Gak adaa, sudah jelas kok :D
