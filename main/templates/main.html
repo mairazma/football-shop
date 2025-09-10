@@ -1,6 +1,73 @@
-<h1>Amaranth Sportcenter</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Amaranth Sportcenter</title>
+  <!-- Import font dari Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Saira:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #dbecfd;
+      margin: 0;
+      
+    }
+    .card {
+      text-align: center;
+      background: white;
+      padding: 30px 50px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
 
-<h5>Name: </h5>
-<p>{{ name }}<p>
-<h5>Class: </h5>
-<p>{{ class }}</p>
+    .card h1 {
+      font-family: 'Saira', sans-serif;
+      color: #007bff;
+      margin-bottom: 10px;
+    }
+
+    .info-block {
+      font-family: "Public Sans", sans-serif;
+      margin-bottom: 15px; /* jarak antar blok diperkecil */
+    }
+
+    .info-block h5 {
+      color: #6c757d;
+      margin: 0; 
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .info-block p {
+      font-size: 18px;
+      font-weight: 500;
+      margin: 5px 0 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Amaranth Sportcenter</h1>
+
+    <div class="info-block">
+        <h5>Name:</h5>
+        <p>{{ name }}</p>
+    </div>
+    
+    <div class="info-block">
+        <h5>Class:</h5>
+        <p>{{ class }}</p>
+    </div>
+  </div>
+</body>
+</html>
