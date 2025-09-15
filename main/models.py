@@ -1,6 +1,7 @@
 from django.db import models
+import uuid
 
-class Product(models.Model):
+class Products(models.Model):
     CATEGORY_CHOICES = [
         ('jersey', 'Jersey'),
         ('shoes', 'Shoes'),
@@ -8,14 +9,16 @@ class Product(models.Model):
         ('accessories', 'Accessories'),
         ('training', 'Training'),
         ('merchandise', 'Merchandise'),
-        ('protection', 'Protection')
+        ('protection', 'Protection'),
+        ('-', '-')
     ]
     
-    nama = models.CharField(max_length=255)
-    price = models.PositiveIntegerField(default=0)
-    description = models.TextField(default=0)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
+    price = models.IntegerField(default=0)
+    description = models.TextField(default="")
     thumbnail = models.URLField(blank=True, null=True)
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='Sport')
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='-')
     is_featured = models.BooleanField(default=False)
 
     # tambahan

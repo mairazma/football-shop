@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% block meta %} {% endblock meta %}
+
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Saira:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        background: #dbecfd;
+        margin: 0;
+        padding: 30px;
+      }
+      .card {
+        width: 80%;
+        max-width: 900px;
+        background: white;
+        padding: 30px 50px;
+        border-radius: 20px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      }
+      .card h1 {
+        font-family: 'Saira', sans-serif;
+        color: #007bff;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .info-block {
+        font-family: "Public Sans", sans-serif;
+        margin-bottom: 15px;
+      }
+      .info-block h5 {
+        color: #6c757d;
+        margin: 0; 
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .info-block p {
+        font-size: 16px;
+        font-weight: 500;
+        margin: 5px 0 15px 0;
+      }
+      button {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 8px;
+        background: #007bff;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+    </style>
+
+</head>
+
+<body>
+    {% block content %} {% endblock content %}
+</body>
+</html>
+

@@ -1,73 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Amaranth Sportcenter</title>
-  <!-- Import font dari Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Saira:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  
-  <style>
-    body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background: #dbecfd;
-      margin: 0;
-      
-    }
-    .card {
-      text-align: center;
-      background: white;
-      padding: 30px 50px;
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    }
+{% extends 'base.html' %}
+{% block content %}
 
-    .card h1 {
-      font-family: 'Saira', sans-serif;
-      color: #007bff;
-      margin-bottom: 10px;
-    }
+<div class="card">
+  <h1>Amaranth Sportcenter</h1>
 
-    .info-block {
-      font-family: "Public Sans", sans-serif;
-      margin-bottom: 15px; /* jarak antar blok diperkecil */
-    }
-
-    .info-block h5 {
-      color: #6c757d;
-      margin: 0; 
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .info-block p {
-      font-size: 18px;
-      font-weight: 500;
-      margin: 5px 0 20px 0;
-    }
-  </style>
-</head>
-<body>
-  <div class="card">
-    <h1>Amaranth Sportcenter</h1>
-
-    <div class="info-block">
-        <h5>Name:</h5>
-        <p>{{ name }}</p>
-    </div>
-    
-    <div class="info-block">
-        <h5>Class:</h5>
-        <p>{{ class }}</p>
-    </div>
+  <div class="info-block">
+    <h5>Name:</h5>
+    <p>{{ name }}</p>
   </div>
-</body>
-</html>
+
+  <div class="info-block">
+    <h5>Class:</h5>
+    <p>{{ class }}</p>
+  </div>
+
+  <a href="{% url 'main:create_product' %}">
+    <button>+ Add Product</button>
+  </a>
+
+  <hr>
+
+  {% if not product_list %}
+    <div class="product-block">
+      <p>Belum ada produk yang dijual.</p>
+    </div>
+  {% else %}
+    {% for product in product_list %}
+      <div class="info-block" style="text-align:left;">
+        <h2>
+          <a href="{% url 'main:show_product' product.id %}">{{ product.title }}</a>
+        </h2>
+
+        <p> {{ product.name }}</p>
+
+        {% if product.thumbnail %}
+          <img src="{{ product.thumbnail }}" alt="thumbnail" width="150" height="100">
+
+        <p>
+          <b>{{ product.get_category_display }}</b>
+          {% if product.is_featured %} | <b>Featured</b>{% endif %}
+          {% if product.is_best_seller %} | <b>Best Seller</b>{% endif %}
+          | Price: <i> {{ product.price }} </i>
+          | Sold: {{ product.purchase_count }}
+        </p>
+        
+        {% endif %}
+
+        <p>{{ product.description|truncatewords:25 }}...</p>
+
+        <p>
+          <a href="{% url 'main:show_product' product.id %}">
+            <button>Read More</button>
+          </a>
+        </p>
+      </div>
+      <hr>
+    {% endfor %}
+  {% endif %}
+</div>
+
+{% endblock content %}
