@@ -16,7 +16,6 @@ def show_main(request):
 
     return render(request, "main.html", context)
 
-
 def show_xml(request):
     products_list = Products.objects.all()
     xml_data = serializers.serialize("xml", products_list)
