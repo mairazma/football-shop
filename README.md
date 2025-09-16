@@ -40,7 +40,18 @@ Jika tidak ada csrf_token, server tidak akan memastikan kembali cookie sesi dan 
 **5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).**  
 Pertama-tama, saya membaca keseluruhan dokumen untuk memberikan gambaran apa saja yang perlu saya kerjakan. Ketika membaca, saya menyadari bahwa alurnya sedikit berbeda dengan tutorial, namun saya pikir step-by-step tidak terlalu penting karena nantinya semua file akan saling terhubung selama fungsinya berjalan. Saya mulai dengan menambahkan 4 fungsi baru di `views.py` untuk memungkinkan saya mengakses database dalam bentuk XML atau JSON, dan mencari data melalui id. Tidak lupa untuk menghubungkannya pada `urls.py` agar fungsi dapat berjalan dan diakses. Ada sedikit kendala ketika membuat page `create_product` dan `product_detail` karena saya sudah mencoba styling HTML sebelumnya. Beberapa penyesuaian saya lakukan, sekali-kali meminta ChatGPT untuk membantu saya. Masalah juga sedikit muncul ketika saya run server pertama kali karena penyesuaian dengn HTML tadi. *Trial and error* tersebut membuat saya lebih memahami alur web development.
 
-
-
 **6. Apakah ada feedback untuk asdos di tutorial 2 yang sudah kalian kerjakan?**  
 Seperti biasa sudah sangat jelassss.
+
+## Screenshot Postman
+### Screenshot akses ../json/
+![alt text](image-1.png)
+
+### Screenshot akses ../xml/
+![alt text](image-2.png)
+
+### Screenshot akses ../json/[id]
+![alt text](image-3.png)
+
+### Screenshot akses ../xml/[id]
+![alt text](image-4.png)
