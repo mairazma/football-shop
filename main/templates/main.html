@@ -15,8 +15,28 @@
   </div>
 
   <a href="{% url 'main:create_product' %}">
-    <button>+ Add Product</button>
+    <button class="button">+ Add Product</button>
   </a>
+
+  <a href="{% url 'main:logout' %}">
+    <button class="button">Logout</button>
+  </a>
+
+  <div class="info-block">
+    <h5>Sesi terakhir login: {{ last_login }}</h5>
+  </div>
+
+  <a href="?filter=all">
+    <button type="button">All Articles</button>
+  </a>
+
+  <a href="?filter=my">
+    <button type="button">My Articles</button>
+  </a>
+
+  <div class="info-block">
+    <h5>Akun yang sedang aktif: {{ active_user }}</h5>
+  </div>
 
   <hr>
 
@@ -48,15 +68,25 @@
 
         <p>{{ product.description|truncatewords:25 }}...</p>
 
+        {% if product.user %}
+        <p>Author: {{ active_user }}</p>
+        {% else %}
+        <p>Author: Anonymous</p>
+        {% endif %}
+
         <p>
           <a href="{% url 'main:show_product' product.id %}">
             <button>Read More</button>
           </a>
         </p>
+
       </div>
       <hr>
     {% endfor %}
   {% endif %}
+
 </div>
+
+
 
 {% endblock content %}

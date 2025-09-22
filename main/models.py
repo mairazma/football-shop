@@ -1,7 +1,11 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 import uuid
+from django.contrib.auth.models import User
 
 class Products(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
     CATEGORY_CHOICES = [
         ('jersey', 'Jersey'),
         ('shoes', 'Shoes'),
@@ -15,7 +19,7 @@ class Products(models.Model):
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
-    price = models.IntegerField(default=0)
+    price = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     description = models.TextField(default="")
     thumbnail = models.URLField(blank=True, null=True)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='-')
@@ -34,3 +38,5 @@ class Products(models.Model):
     def increment_sell(self):
         self.purchase_count += 1
         self.save()
+
+

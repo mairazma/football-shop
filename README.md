@@ -55,3 +55,25 @@ Seperti biasa sudah sangat jelassss.
 
 ### Screenshot akses ../xml/[id]
 ![alt text](image-4.png)
+
+# TUGAS 4
+
+**1. Apa itu Django AuthenticationForm? Jelaskan juga kelebihan dan kekurangannya.**  
+Django AuthenticationForm adalah suatu built-in class dari Django yang dapat membuat form untuk membuka akses bagi sebuah akun user untuk masuk ke suatu situs. Seperti sifat class pada umumnya, AuthenticationForm memiliki atribut `is_active()` berupa nilai boolean. Upaya login akan ditolak jika atribut ini bernilai `false`. Kelebihannya, karena class ini sudah dibuat oleh Django, fitur-fitur keamanan juga sudah ditangani, seperti serangan CSRF (Cross-Site Request Forgery). Sayangnya, karena class ini telah dibuat oleh Django, kustomisasi harus dilakukan secara manual oleh _developer_. Misal, pesan peringatan default perlu kita ubah sendiri pada HTML dan CSS, bagian layout form juga perlu kita kustomisasi manual karena Django hanya membuat sebuah template yang tidak menarik.
+
+Source: [https://docs.djangoproject.com/en/5.2/topics/auth/default/](https://docs.djangoproject.com/en/5.2/topics/auth/default/)
+
+**2. Apa perbedaan antara autentikasi dan otorisasi? Bagaiamana Django mengimplementasikan kedua konsep tersebut?**  
+Autentikasi adalah untuk mengidentifikasi sebuah user, sedangkan otorisasi adalah proses memverifikasi akses-akses apa yang dimiliki sebuah user. Untuk melakukan proses autentikasi, Django membuat beberapa atribut seperti username, password, dan email yang membuat setiap user unik. Atribut-atribut ini akan membantu Django untuk mengidentifikasi user mana yang sedang aktif, yang sedang login, dll. Kemudian untuk proses otorisasi, Django membuat atribut permissions untuk objek user yang dapat dikustomisasi. Django juga menyediakan dekorator untuk fungsi pada `views.py`, contohnya `@login_required`.
+
+**3. Apa saja kelebihan dan kekurangan session dan cookies dalam konteks menyimpan state di aplikasi web?**   
+Session dapat menyimpan data sensitif pada lapisan server, seperti user_ID dan attribute sensitif. Namun, karena session disimpan di server, ada batasan session yang dapat ditampung oleh server. Sehingga jika sebuah server diperkirakan akan menyimpan banyak session (akan ada banyak user yang login pada satu waktu), perlu pertimbangan mengenai kapasitas server.
+
+Sementara itu, cookie menyimpan data pada browser masing-masing pengguna. Sehingga tidak akan memberatkan server karena cookie ditanggung masing-masing pengguna. Hanya saja, karena cookie disimpan pada masing-masing pengguna, cookie akan bermasalah jika suatu pengguna misal tidak memiliki/menerima cookie tersebut.
+
+**4. Apakah penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai? Bagaimana Django menangani hal tersebut?**  
+Cookie menjadi salah satu celah kelamanan suatu website karena disimpan di browser pengguna. Data yang disimpan menjadi rentan terhadap pencurian. Penyerang bisa mengakses cookie dan berpura-pura sebagai user tanpa izin user yang legal. Selain itu, pencurian cookie menjadi bahaya karena data-data yang disimpan bisa jadi diubah seenaknya.
+
+
+**5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).**  
+Pertama-tama, saya membaca keseluruhan dokumen untuk memberikan gambaran apa saja yang perlu saya kerjakan. Seperti biasa, step-by-step pada tutorial sebetulnya dapat dijalankan tanpa memerhatikan urutan. Saya mengawali pengerjaan dengan membuat fitur register, login, dan logout, diikuti dengan penyesuaian  template, `views.py`, dan `urls.py`. Setelah itu, barulah saya menghubungkan user dengan objek Product. Begitu semua yang penting sudah dilakukan, saya melanjutkan dengan penyesuaian CSS mengikuti `base.html` yang telah saya rancang sebelumnya. 
