@@ -29,7 +29,7 @@ class Products(models.Model):
     purchase_count = models.PositiveIntegerField(default=0)
     
     def __str__(self):
-        return self.title
+        return self.name
     
     @property
     def is_best_seller(self):
