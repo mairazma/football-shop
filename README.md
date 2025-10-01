@@ -74,6 +74,134 @@ Sementara itu, cookie menyimpan data pada browser masing-masing pengguna. Sehing
 **4. Apakah penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai? Bagaimana Django menangani hal tersebut?**  
 Cookie menjadi salah satu celah kelamanan suatu website karena disimpan di browser pengguna. Data yang disimpan menjadi rentan terhadap pencurian. Penyerang bisa mengakses cookie dan berpura-pura sebagai user tanpa izin user yang legal. Selain itu, pencurian cookie menjadi bahaya karena data-data yang disimpan bisa jadi diubah seenaknya.
 
-
 **5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).**  
 Pertama-tama, saya membaca keseluruhan dokumen untuk memberikan gambaran apa saja yang perlu saya kerjakan. Seperti biasa, step-by-step pada tutorial sebetulnya dapat dijalankan tanpa memerhatikan urutan. Saya mengawali pengerjaan dengan membuat fitur register, login, dan logout, diikuti dengan penyesuaian  template, `views.py`, dan `urls.py`. Setelah itu, barulah saya menghubungkan user dengan objek Product. Begitu semua yang penting sudah dilakukan, saya melanjutkan dengan penyesuaian CSS mengikuti `base.html` yang telah saya rancang sebelumnya. 
+
+# TUGAS 5
+
+**1. Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!**  
+- **!important**  
+    Ditulis dengan keterangan `!important` meng-override semua selector.
+    ```css
+    p { color: #8298c5ff !important; }
+    ```
+- **Inline Style**  
+    Ditulis langsung di bracket elemen.
+    ``` html
+    <h5 style="color: #404040;">hiluu</h5>
+    ```
+
+- **ID Selector**  
+    Ditulis dengan keterangan ID.
+    ``` css
+    #IDSelector { color: #8298c5ff; }
+    ```
+- **Class, Attribute, Pseudo-class**  
+    Ditulis dengan keterangan class, attribute, atau psudo-class.
+    ``` css
+    .class { color: #8298c5ff; } /* class */
+    [type="attribute"] { color: #8298c5ff; } /* attribute */
+    a:hover { color: #8298c5ff; } /* pseudo-class */
+    ```
+
+- **Element, Pseudo-element**  
+    Ditulis keterangan elemennya dan pseudo-element.
+    ``` css
+    p { color: #8298c5ff; } /* element */
+    p::first-line { color: #8298c5ff } /* pseudo-element */
+    ```
+
+**2. Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design, serta jelaskan mengapa!**  
+Responsive design adalah desain sebuah web yang dapat menyesuaikan beberapa device, utamanya desktop dan mobile. Komponen ini penting karena saat ini, fleksibilitas sebuah web menjadi pertimbangan pada pengguna untuk menggunakannya atau tidak. Web yang reponsif dapat meningkatkan pengalaman pengguna sehingga website dapat lebih 'preferable'
+
+Contoh aplikasi yang sudah menerapkan responsive yaitu berbagai media sosial. Ambil contoh Instagram, meskipun lebih banyak pengguna Instagram mobile, aplikasi ini tetap bisa diakses melalui dekstop dengan tampilan yang baik.
+
+Contoh web yang belum menerapkan yaitu [arngren.net](arngren.net). Jika website ini diakses melalui mobile, tampilannya masih sama dengan yang di-desktop, sehingga pengguna kesulitan untuk mengakses fitur-fitur web (terlepas dari tampilannya yang memang tidak baik).
+
+**3. Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!**  
+- **Margin**  
+    Spasi kosong antara elemen dan luar elemen. Margin berguna untuk mengatur posisi antar elemen agak tidak saling bertabrakan.  
+    _Cara implementasi:_
+    ``` css
+    div {
+        /* semua sisi*/
+        margin: 20px blue
+        
+        /* specify tiap sisi */
+        margin-top: 10px;
+        margin-right: 20px;
+        margin-bottom: 30px;
+        margin-left: 40px;
+
+        /* short cut */
+        /* Atas | Kanan | Bawah | Kiri */
+        margin: 10px 20px 30px 40px;
+    }   
+    ```
+- **Border**  
+    Garis di pada sisi elemen untuk mengidentifikasi bentuk elemen. Border biasanya digunakan untuk memperjelas elemen, biasanya berbentuk garis yang mengelilingi elemen. Border sendiri berada di antara margin dan padding.
+    _Cara implementasi:_  
+    ``` css
+    .card {
+        /* semua sisi */
+        /* width | style | color */
+        border: 2px solid black; 
+
+        /* specify tiap sisi */
+        border-top: 2px solid red;
+        border-right: 3px dashed green;
+        border-bottom: 4px dotted blue;
+        border-left: 5px double black;
+
+        /* specify satu-satu */
+        border-width: 2px;         
+        border-style: solid;      
+        border-color: blue;           
+        border-width: 2px 4px 6px 8px;   
+        border-style: solid dashed none dotted;
+        border-color: red green blue black;
+
+        /* lengkungan sudut */
+        /* semua sudut */
+        border-radius: 10px; 
+
+        /* atas-kiri & bawah-kanan | atas-kanan & bawah-kiri */
+        border-radius: 10px 20px; 
+
+        /* masing-masing sudut */
+        border-radius: 10px 20px 30px 40px; 
+    }
+
+    ```
+- **Padding**  
+    Ruang kosong di dalam elemen untuk membatasi sampai mana konten dapat diisi. Dengan kata lain, margin dalam. Padding memastikan konten di dalam elemen tidak keluar elemen atau tidak terlalu dekat dengan sisi untuk meningkatkan UI/UX.
+    _Cara implementasi:_
+    ``` css
+    .box {
+        /* specify tiap sisi */
+        padding-top: 5px;
+        padding-right: 15px;
+        padding-bottom: 25px;
+        padding-left: 35px;
+
+        /* Semua sisi */
+        padding: 20px;
+
+        /* Atas & bawah | Kiri & kanan */
+        padding: 5px 15px;
+
+        /* Atas | Kiri & kanan | Bawah */
+        padding: 5px 10px 15px;
+
+        /* Atas | Kanan | Bawah | Kiri */
+        padding: 5px 10px 15px 20px;
+    }
+    ```
+
+**4. Jelaskan konsep flex box dan grid layout beserta kegunaannya!**  
+Flex box adalah konsep penyesuaian konten dalam 1 dimensi, entah akan disusun ke samping (horizontal, secara kolom) atau ke bawah (vertikal, secara baris). Flex box memudahkan developer untuk menyusun konten dalam semua box/container sehingga konten otomatis tersusun rapi. Flex box bisa mengatur ruang antarelemen. Apakah isi konten dapat di-scroll? Atau akan ter-wrap ketika elemen melebihi kapasitas box. Flex box umumnya digunakan untuk enyusun tombol atau navigation bar.
+
+Grid Layout sendiri juga konsep penyesuaian konten, hanya saja dalam 2 dimensi. Grid layout memungkinkan kita menaruh lebih banyak konten dalam satu box/container tanpa khawatir ketidaksesuaian tampilan karena grid layout otomatis membuatnya responsif. Layout ini biasanya digunakan untuk menyusun elemen yang lebih kompleks dan banyak, seperti membuat galeri, dashboard, body page, dan lain-lain. 
+ 
+**5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!**  
+Pertama-tama, saya membaca keseluruhan dokumen untuk memberikan gambaran apa saja yang perlu saya kerjakan. Saya pertama menambahkan button edit dan hapus untuk produk terlebih dahulu. Kemudian, karena saya sudah mencoba membuat css sebelumnya, saya memindahkan css tersebut ke file baru yakni `global.css`. Setelah saya berhasil memindahkannya, saya coba membuat navigation bar responsif. Setelah itu, barulah saya melakukan finishing seperti memoles css (karena css yang kemarin masih terlalu basic) sembari meng-explore css bersama ChatGPT.
