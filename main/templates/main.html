@@ -3,6 +3,7 @@
 
 {% block meta %}
 <title>Amaranth Sportcenter</title>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
 {% endblock meta %}
 
 {% block content %}
@@ -11,20 +12,34 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     <!-- Header Section -->
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Latest Football product</h1>
-      <p class="text-gray-600">Stay updated with the latest football product and merchandise</p>
+    <div class="mb-8 flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Latest Football Products</h1>
+        <p class="text-gray-600">Stay updated with the latest football products and merchandise</p>
+      </div>
+      <button onclick="openCreateModal()" class="button1 flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Add Product
+      </button>
     </div>
 
     <!-- Filter Section -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 bg-white rounded-lg border border-gray-200 p-4">
       <div class="flex space-x-3 mb-4 sm:mb-0">
-        <a href="?" class="{% if request.GET.filter == 'all' or not request.GET.filter  %} button1 {% else %} button2 {% endif %} button2:hover">
-          All product
-        </a>
-        <a href="?filter=my" class="{% if request.GET.filter == 'my' %} button1 {% else %} button2 {% endif %} button1:hover">
-          My product
-        </a>
+        <button onclick="filterProducts('all')" id="filter-all" class="button1">
+          All Products
+        </button>
+        <button onclick="filterProducts('my')" id="filter-my" class="button2">
+          My Products
+        </button>
+        <button onclick="refreshProducts()" class="button2 flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          Refresh
+        </button>
       </div>
       {% if user.is_authenticated %}
         <div class="text-sm text-gray-500">
@@ -33,25 +48,382 @@
       {% endif %}
     </div>
 
-    <!-- product Grid -->
-    {% if not product_list %}
-      <div class="bg-white rounded-lg border border-gray-200 p-12 text-center">
-        <div class="w-32 h-32 mx-auto mb-4">
-          <img src="{% static 'image/no-product.png' %}" alt="No product available" class="w-full h-full object-contain">
-        </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">No product found</h3>
-        <p class="text-gray-500 mb-6">Be the first to share football product with the community.</p>
-        <a href="{% url 'main:create_product' %}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-          Create product
-        </a>
-      </div>
-    {% else %}
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {% for product in product_list %}
-          {% include 'card_product.html' with product=product %}
-        {% endfor %}
-      </div>
-    {% endif %}
+    <!-- Products Container -->
+    <div id="products-container">
+      <!-- Products will be loaded here via AJAX -->
+    </div>
+
   </div>
 </div>
+
+<!-- Modal Create/Edit Product -->
+<div id="productModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div class="p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 id="modalTitle" class="text-2xl font-bold text-gray-900">Add New Product</h2>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <form id="productForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+        <input type="hidden" id="productId" name="productId">
+        
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Product Name *</label>
+          <input type="text" id="name" name="name" required
+            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+        </div>
+
+        <div>
+          <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Price *</label>
+          <input type="number" id="price" name="price" required min="0"
+            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+        </div>
+
+        <div>
+          <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+          <textarea id="description" name="description" rows="4"
+            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"></textarea>
+        </div>
+
+        <div>
+          <label for="thumbnail" class="block text-sm font-medium text-gray-700 mb-2">Thumbnail URL</label>
+          <input type="url" id="thumbnail" name="thumbnail"
+            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+        </div>
+
+        <div>
+          <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+          <select id="category" name="category"
+            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+            <option value="-">-</option>
+            <option value="jersey">Jersey</option>
+            <option value="shoes">Shoes</option>
+            <option value="ball">Ball</option>
+            <option value="accessories">Accessories</option>
+            <option value="training">Training</option>
+            <option value="merchandise">Merchandise</option>
+            <option value="protection">Protection</option>
+          </select>
+        </div>
+
+        <div class="flex items-center">
+          <input type="checkbox" id="is_featured" name="is_featured"
+            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+          <label for="is_featured" class="ml-2 text-sm text-gray-700">Featured Product</label>
+        </div>
+
+        <div class="flex gap-3 pt-4">
+          <button type="submit" class="button1 flex-1">
+            <span id="submitButtonText">Add Product</span>
+          </button>
+          <button type="button" onclick="closeModal()" class="button2 flex-1">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Delete Confirmation -->
+<div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-lg max-w-md w-full p-6">
+    <h3 class="text-xl font-bold text-gray-900 mb-4">Delete Product?</h3>
+    <p class="text-gray-600 mb-6">Are you sure you want to delete this product? This action cannot be undone.</p>
+    
+    <div class="flex gap-3">
+      <button onclick="confirmDelete()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex-1">
+        Delete
+      </button>
+      <button onclick="closeDeleteModal()" class="button2 flex-1">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  let currentFilter = 'all';
+  let productToDelete = null;
+
+  document.addEventListener('DOMContentLoaded', function() {
+    refreshProducts();
+  
+  });
+
+  function filterProducts(filter) {
+    currentFilter = filter;
+    
+    // Update button styles
+    document.getElementById('filter-all').className = filter === 'all' ? 'button1' : 'button2';
+    document.getElementById('filter-my').className = filter === 'my' ? 'button1' : 'button2';
+    
+    refreshProducts();
+  }
+
+  // Refresh products from server
+  async function refreshProducts() {
+    const container = document.getElementById('products-container');
+    
+    // Show loading state
+    container.innerHTML = `
+      <div class="bg-white rounded-lg border border-gray-200 p-12 text-center">
+        <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p class="text-gray-600">Loading products...</p>
+      </div>
+    `;
+
+    try {
+      const response = await fetch(`/api/products/?filter=${currentFilter}`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch products');
+      }
+
+      const data = await response.json();
+      displayProducts(data.products);
+      
+    } catch (error) {
+      // Show error state
+      container.innerHTML = `
+        <div class="bg-white rounded-lg border border-red-200 p-12 text-center">
+          <svg class="w-16 h-16 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">Error Loading Products</h3>
+          <p class="text-gray-500 mb-6">${error.message}</p>
+          <button onclick="refreshProducts()" class="button1">Try Again</button>
+        </div>
+      `;
+    }
+  }
+
+  // Display products
+  function displayProducts(products) {
+    const container = document.getElementById('products-container');
+    
+    if (products.length === 0) {
+      container.innerHTML = `
+        <div class="bg-white rounded-lg border border-gray-200 p-12 text-center">
+          <div class="w-32 h-32 mx-auto mb-4">
+            <svg class="w-full h-full text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">No Products Found</h3>
+          <p class="text-gray-500 mb-6">Be the first to share football products with the community.</p>
+          <button onclick="openCreateModal()" class="button1">Create Product</button>
+        </div>
+      `;
+      return;
+    }
+
+    const productsHTML = products.map(product => createProductCard(product)).join('');
+    container.innerHTML = `
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        ${productsHTML}
+      </div>
+    `;
+  }
+
+  function createProductCard(product) {
+    const thumbnailUrl = product.thumbnail || 'https://via.placeholder.com/300x200?text=No+Image';
+    const isOwner = product.is_owner;
+    
+    return `
+      <div class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="aspect-w-16 aspect-h-9 bg-gray-200">
+          <img src="${DOMPurify.sanitize(thumbnailUrl)}" alt="${DOMPurify.sanitize(product.name)}" 
+               class="w-full h-48 object-cover">
+        </div>
+        <div class="p-4">
+          ${product.is_featured ? '<span class="inline-block px-2 py-1 text-xs font-semibold text-blue-600 bg-blue-100 rounded-full mb-2">Featured</span>' : ''}
+          <span class="inline-block px-2 py-1 text-xs font-semibold text-gray-600 bg-gray-100 rounded-full mb-2">${DOMPurify.sanitize(product.category)}</span>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">${DOMPurify.sanitize(product.name)}</h3>
+          <p class="text-gray-600 text-sm mb-3 line-clamp-2">${DOMPurify.sanitize(product.description)}</p>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xl font-bold text-blue-600">Rp ${parseInt(product.price).toLocaleString('id-ID')}</span>
+            <span class="text-sm text-gray-500">${product.purchase_count} sold</span>
+          </div>
+          <div class="text-xs text-gray-500 mb-3">By: ${DOMPurify.sanitize(product.user)}</div>
+          ${isOwner ? `
+            <div class="flex gap-2">
+              <button onclick="openEditModal('${product.id}')" class="flex-1 px-3 py-2 bg-yellow-500 text-white text-sm rounded-md hover:bg-yellow-600 transition-colors">
+                Edit
+              </button>
+              <button onclick="openDeleteModal('${product.id}')" class="flex-1 px-3 py-2 bg-red-500 text-white text-sm rounded-md hover:bg-red-600 transition-colors">
+                Delete
+              </button>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  function openCreateModal() {
+    document.getElementById('modalTitle').textContent = 'Add New Product';
+    document.getElementById('submitButtonText').textContent = 'Add Product';
+    document.getElementById('productForm').reset();
+    document.getElementById('productId').value = '';
+    document.getElementById('productModal').classList.remove('hidden');
+  }
+
+  async function openEditModal(productId) {
+    try {
+      const response = await fetch(`/api/products/${productId}/`);
+      const data = await response.json();
+      
+      if (data.success) {
+        const product = data.product;
+        
+        document.getElementById('modalTitle').textContent = 'Edit Product';
+        document.getElementById('submitButtonText').textContent = 'Update Product';
+        document.getElementById('productId').value = product.id;
+        document.getElementById('name').value = product.name;
+        document.getElementById('price').value = product.price;
+        document.getElementById('description').value = product.description;
+        document.getElementById('thumbnail').value = product.thumbnail || '';
+        document.getElementById('category').value = product.category;
+        document.getElementById('is_featured').checked = product.is_featured;
+        
+        document.getElementById('productModal').classList.remove('hidden');
+      } else {
+        showToast('Error', 'Failed to load product data', 'error');
+      }
+    } catch (error) {
+      showToast('Error', 'Error loading product data', 'error');
+    }
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('productModal');
+    const form = document.getElementById('productForm');
+    
+    modal.classList.add('hidden');
+    form.reset();
+    
+    const submitButton = form.querySelector('button[type="submit"]');
+    submitButton.disabled = false;
+    document.getElementById('submitButtonText').textContent = 'Add Product';
+  }
+
+  async function handleFormSubmit(e) {
+    e.preventDefault();
+    e.stopPropagation(); 
+    const submitButton = e.target.querySelector('button[type="submit"]');
+    const submitButtonText = document.getElementById('submitButtonText');
+    
+    submitButton.disabled = true;
+    const originalText = submitButtonText.textContent;
+    submitButtonText.textContent = 'Saving...';
+    
+    const productId = document.getElementById('productId').value;
+    const formData = new FormData(e.target);
+    
+    const url = productId 
+      ? `/api/products/${productId}/edit/`
+      : '/api/products/create/';
+    
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken')
+        }
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Close modal FIRST
+        closeModal();
+        
+        // show toast
+        const action = productId ? 'updated' : 'created';
+        showToast('Success!', `Product ${action} successfully!`, 'success');
+        
+        refreshProducts();
+      } else {
+        showToast('Error', data.message || 'An error occurred', 'error');
+        submitButton.disabled = false;
+        submitButtonText.textContent = originalText;
+      }
+    } catch (error) {
+      showToast('Network Error', 'Network error occurred', 'error');
+      submitButton.disabled = false;
+      submitButtonText.textContent = originalText;
+    }
+  }
+
+  // Open delete modal
+  function openDeleteModal(productId) {
+    productToDelete = productId;
+    document.getElementById('deleteModal').classList.remove('hidden');
+  }
+
+  // Close delete modal
+  function closeDeleteModal() {
+    productToDelete = null;
+    document.getElementById('deleteModal').classList.add('hidden');
+  }
+
+  // Confirm delete
+  async function confirmDelete() {
+    if (!productToDelete) return;
+    
+    try {
+      const response = await fetch(`/api/products/${productToDelete}/delete/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken')
+        }
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        showToast('Success', data.message, 'success');
+        closeDeleteModal();
+        refreshProducts();
+      } else {
+        showToast('Error', data.message || 'Delete failed', 'error');
+      }
+    } catch (error) {
+      showToast('Network Error', 'Network error occurred', 'error');
+    }
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
+
 {% endblock content %}

@@ -205,3 +205,21 @@ Grid Layout sendiri juga konsep penyesuaian konten, hanya saja dalam 2 dimensi. 
  
 **5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!**  
 Pertama-tama, saya membaca keseluruhan dokumen untuk memberikan gambaran apa saja yang perlu saya kerjakan. Saya pertama menambahkan button edit dan hapus untuk produk terlebih dahulu. Kemudian, karena saya sudah mencoba membuat css sebelumnya, saya memindahkan css tersebut ke file baru yakni `global.css`. Setelah saya berhasil memindahkannya, saya coba membuat navigation bar responsif. Setelah itu, barulah saya melakukan finishing seperti memoles css (karena css yang kemarin masih terlalu basic) sembari meng-explore css bersama ChatGPT.
+
+# TUGAS 6
+ 
+**1. Apa perbedaan antara synchronous request dan asynchronous request?**  
+Synchronous Request berarti ketika pengguna melakukan request, pengguna harus menunggu proses-proses yang terjadi di belakang (bagian server) untuk mendapatkan response. Seperti munculnya layar putih setelah melakukan request yang mendandakan loading. Sementara itu, asynchronous request mengizinkan pengguna melakukan kegiatan lain sembari menunggu response dari request mereka. Akhirnya, tidak terjadi full-page-reload, biasanya penggunaan AJAX mendukung asynchronouse request.
+
+**2. Bagaimana AJAX bekerja di Django (alur request–response)?**  
+AJAX dipicu oleh suatu event, misal pengguna klik sebuah button, tombol like, tombol save, dll. Ketika event tersebut terjadi, JavaScript akan mengirimkan HTTP request dan akan dilakukan proses routing oleh Django. Kemudian, setelah ditemukan url dan views yang cocok, fungsi pada views yg bersesuaian akan dijalankan. Untuk hal ini, biasanya nilai kembalian fungsi tersebut adalah json. Nilai kembalian tersebut dikembalikan ke JavaScript agar DOM dapat dimanipulasi (agar tidak perlu refresh halaman).
+
+**3. Apa keuntungan menggunakan AJAX dibandingkan render biasa di Django?**  
+Karena asinkronus, yakni pengguna dapat melakukan kegiatan lain sembari menunggu response, ini dapat meningkatkan UX sehingga pengguna tidak perlu berlama-lama menunggu. Karena tidak ada layar putih juga (biasanya load kalau pakai render), ini meningkatkan profesionalitas website. Kemudian, karena yang di-transfer umumnya file json, hal ini meringankan server dalam perpindahan data dibandingkan dengan render biasa yang harus load data, css, dan html sekaligus.
+
+**4. Bagaimana cara memastikan keamanan saat menggunakan AJAX untuk fitur Login dan Register di Django?**  
+Pengimplementasian HTTPS dan CSRF sama dengan render biasa masih menjadi solusi keamanan. HTTPS akan mengenkripsi data (khususnya data sensitif seperti password). Kemudian CSRF sendiri seperti biasa mencegah aktivitas di luar token cookie yang valid. Selanjutnya, memanfaatkan pemindahan data oleh AJAX yang hanya json, kita bisa membatasi data yang dikirim hanya berupa status (sukses/gagal) dan token pengguna. Karena, json yang dikirim balik oleh AJAX sebetulnya dapat dilihat melalui Inspect Element, sehingga dapat diakses siapapun.
+
+
+**5. Bagaimana AJAX mempengaruhi pengalaman pengguna (User Experience) pada website?**  
+Pengguna tidak perlu menunggu lama untuk mendapatkan response. Kemudian juga fitur auto-fill-search juga didukung oleh AJAX, sehingaa hal ini mempermudah pengguna untuk melakukan pencarian (misal hanya ingat keyword, dll). Perubahan langsung terjadi, misalnya mengklik like pada suatu postingan tidak memerlukan reload page keseluruhan. Dengan begitu, website tidak membutuhkan waktu lama untuk melakukan event-event simpel. Hal-hal tersebut membuat website menjadi lebih interaktif sehingga pengguna lebih merasa dihargai oleh developer web tersebut (karena kayak pengguna adalah segalanya gt).
